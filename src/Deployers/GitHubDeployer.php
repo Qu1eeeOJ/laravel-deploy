@@ -2,7 +2,7 @@
 
 namespace Qu1eeeOJ\Deploy\Deployers;
 
-use Illuminate\Http\Client\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Qu1eeeOJ\Deploy\Contracts\DeployerConfigContract;
 use Qu1eeeOJ\Deploy\Contracts\DeployerConsoleContract;
@@ -88,6 +88,9 @@ final readonly class GitHubDeployer implements DeployerContract
             return false;
         }
 
-        return hash_equals('sha=1', hash_hmac('sha1', $request->getContent(), $secret));
+        return hash_equals(
+            'sha1=' . hash_hmac('sha1', $request->getContent(), $secret),
+            $headerValue
+        );
     }
 }
