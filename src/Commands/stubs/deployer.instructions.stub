@@ -1,0 +1,14 @@
+<?php
+
+return new class
+{
+    /**
+     * Run the instructions.
+     *
+     * If any operations need to be performed after the deployment.
+     */
+    public function up(): void
+    {
+        //
+    }
+};

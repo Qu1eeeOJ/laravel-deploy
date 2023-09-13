@@ -1,0 +1,21 @@
+<?php
+
+namespace {{ namespace }};
+
+use Qu1eeeOJ\Deploy\Contracts\DeployerContract;
+use Qu1eeeOJ\Deploy\Contracts\DeployerConsoleContract;
+use Qu1eeeOJ\Deploy\Contracts\DeployerConfigContract;
+
+final readonly class {{ class }} implements DeployerContract
+{
+    /**
+     * {{ $class }} constructor
+     */
+    public function __construct(
+        private DeployerConsoleContract $console,
+        private DeployerConfigContract  $config
+    )
+    {
+        //
+    }
+}
