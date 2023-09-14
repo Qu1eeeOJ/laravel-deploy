@@ -27,16 +27,16 @@ readonly class DeployService
      */
     public function run(): void
     {
-        event(DeployStarted::class);
+        DeployStarted::dispatch();
         $this->setMaintenance(true);
 
         try {
             $changes = $this->deployer->deploy();
             $this->runInstructions();
 
-            event(DeploySuccessfully::class, $changes);
+            DeploySuccessfully::dispatch($changes);
         } catch (\Throwable $throwable) {
-            event(DeployFailed::class, $throwable);
+            DeployFailed::dispatch($throwable);
         }
 
         $this->setMaintenance(false);
