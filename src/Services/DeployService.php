@@ -4,6 +4,7 @@ namespace Qu1eeeOJ\Deploy\Services;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 use Qu1eeeOJ\Deploy\Contracts\DeployerConfigContract;
 use Qu1eeeOJ\Deploy\Contracts\DeployerContract;
 use Qu1eeeOJ\Deploy\Contracts\DeployerInstructionsRepositoryContract;
@@ -39,6 +40,14 @@ readonly class DeployService
         }
 
         $this->setMaintenance(false);
+    }
+
+    /**
+     * Get the name of the file for logs
+     */
+    public static function getLogger(): \Psr\Log\LoggerInterface
+    {
+        return Log::build(App::make(DeployerConfigContract::class)->getConfig()['logging']);
     }
 
     /**

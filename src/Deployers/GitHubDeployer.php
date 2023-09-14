@@ -3,11 +3,11 @@
 namespace Qu1eeeOJ\Deploy\Deployers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Qu1eeeOJ\Deploy\Contracts\DeployerConfigContract;
 use Qu1eeeOJ\Deploy\Contracts\DeployerConsoleContract;
 use Qu1eeeOJ\Deploy\Contracts\DeployerContract;
 use Qu1eeeOJ\Deploy\Traits\Dispatchable;
+use Qu1eeeOJ\Deploy\Services\DeployService;
 
 final readonly class GitHubDeployer implements DeployerContract
 {
@@ -21,9 +21,11 @@ final readonly class GitHubDeployer implements DeployerContract
     private string $git;
 
     /**
-     * @var string
+     * Logger
+     * 
+     * @var \Psr\Log\LoggerInterface
      */
-    private string $loggerFile;
+    private \Psr\Log\LoggerInterface $logger;
 
     /**
      * GitHubDeployer constructor
@@ -34,13 +36,7 @@ final readonly class GitHubDeployer implements DeployerContract
     )
     {
         $this->git = $this->config->getDriverConfig()['git_path'];
-
-        $this->loggerFile =
-            str_replace(
-                'deploy.log',
-                sprintf('deploy-%s.log', Carbon::now()->format('Y-m-d_h-i-s')),
-                $this->config->getConfig()['logging']
-            );
+        $this->logger = DeployService::getLogger();
     }
 
     /**
@@ -48,17 +44,26 @@ final readonly class GitHubDeployer implements DeployerContract
      */
     public function deploy(): array
     {
-        $this->console->info(sprintf('[%s] Deploy started...', self::class));
+        $message = sprintf('[%s] Deploy started...', self::class);
+        $this->logger->info($message);
+        $this->console->info($message);
 
         // ---------------------------------------
         // 1. We reset the uncommitted changes
         // 2. We get new changes and write them to a file
         // ---------------------------------------
-        $this->console->info(exec(sprintf('%s -C %s reset --hard', $this->git, base_path())));
-        $this->console->info(exec(sprintf('%s -C %s pull > %s', $this->git, base_path(), $this->loggerFile)));
+        $message = exec(sprintf('%s -C %s reset --hard', $this->git));
+        $this->logger->info($message);
+        $this->console->info($message);
+
+        $message = exec(sprintf('%s -C %s pull', $this->git, base_path()));
+        $this->logger->info($message);
+        $this->console->info($message);
         // ---------------------------------------
 
-        $this->console->info(sprintf('[%s] Deploy finish...', self::class));
+        $message = sprintf('[%s] Deploy finish...', self::class);
+        $this->logger->info($message);
+        $this->console->info($message);
 
         return [];
     }

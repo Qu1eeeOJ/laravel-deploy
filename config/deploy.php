@@ -63,5 +63,11 @@ return [
      *
      * Logging Settings.
      */
-    'logging' => storage_path('logs/deploy/deploy.log')
+    'logging' => [
+        'driver' => 'daily',
+        'path' => storage_path('logs/deploys/deploy.log'),
+        'level' => 'debug',
+        'days' => 7,
+        'replace_placeholders' => true
+    ]
 ];
