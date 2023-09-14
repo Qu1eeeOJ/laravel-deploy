@@ -52,7 +52,7 @@ final readonly class GitHubDeployer implements DeployerContract
         // 1. We reset the uncommitted changes
         // 2. We get new changes and write them to a file
         // ---------------------------------------
-        $message = exec(sprintf('%s -C %s reset --hard', $this->git));
+        $message = exec(sprintf('%s -C %s reset --hard', $this->git, base_path()));
         $this->logger->info($message);
         $this->console->info($message);
 
